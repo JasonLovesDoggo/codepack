@@ -1,0 +1,183 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="CssUnknownProperty" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myCustomPropertiesEnabled" value="true" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
+      <option name="myCustomPropertiesList">
+        <value>
+          <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="transition" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="EditorConfigEncoding" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="4">
+            <item index="0" class="java.lang.String" itemvalue="noprefetch" />
+            <item index="1" class="java.lang.String" itemvalue="autocorrect" />
+            <item index="2" class="java.lang.String" itemvalue="key" />
+            <item index="3" class="java.lang.String" itemvalue="maximum-scale" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="12">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="br" />
+            <item index="7" class="java.lang.String" itemvalue="il" />
+            <item index="8" class="java.lang.String" itemvalue="li" />
+            <item index="9" class="java.lang.String" itemvalue="--bg" />
+            <item index="10" class="java.lang.String" itemvalue="--fg" />
+            <item index="11" class="java.lang.String" itemvalue="pre" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HttpUrlsUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredUrls">
+        <list>
+          <option value="http://localhost" />
+          <option value="http://127.0.0.1" />
+          <option value="http://0.0.0.0" />
+          <option value="http://www.w3.org/" />
+          <option value="http://json-schema.org/draft" />
+          <option value="http://java.sun.com/" />
+          <option value="http://xmlns.jcp.org/" />
+          <option value="http://javafx.com/javafx/" />
+          <option value="http://javafx.com/fxml" />
+          <option value="http://maven.apache.org/xsd/" />
+          <option value="http://maven.apache.org/POM/" />
+          <option value="http://www.springframework.org/schema/" />
+          <option value="http://www.springframework.org/tags" />
+          <option value="http://www.springframework.org/security/tags" />
+          <option value="http://www.thymeleaf.org" />
+          <option value="http://www.jboss.org/j2ee/schema/" />
+          <option value="http://www.jboss.com/xml/ns/" />
+          <option value="http://www.ibm.com/webservices/xsd" />
+          <option value="http://activemq.apache.org/schema/" />
+          <option value="http://schema.cloudfoundry.org/spring/" />
+          <option value="http://schemas.xmlsoap.org/" />
+          <option value="http://cxf.apache.org/schemas/" />
+          <option value="http://primefaces.org/ui" />
+          <option value="http://tiles.apache.org/" />
+          <option value="http://" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="LossyEncoding" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyBroadExceptionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES">
+      <option name="ourVersions">
+        <value>
+          <list size="2">
+            <item index="0" class="java.lang.String" itemvalue="3.13" />
+            <item index="1" class="java.lang.String" itemvalue="3.12" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="49">
+            <item index="0" class="java.lang.String" itemvalue="dsc" />
+            <item index="1" class="java.lang.String" itemvalue="discord" />
+            <item index="2" class="java.lang.String" itemvalue="aiohttp" />
+            <item index="3" class="java.lang.String" itemvalue="pycord" />
+            <item index="4" class="java.lang.String" itemvalue="simplegist" />
+            <item index="5" class="java.lang.String" itemvalue="matplotlib" />
+            <item index="6" class="java.lang.String" itemvalue="numpy" />
+            <item index="7" class="java.lang.String" itemvalue="dotenv" />
+            <item index="8" class="java.lang.String" itemvalue="typed-ast" />
+            <item index="9" class="java.lang.String" itemvalue="profanity-filter" />
+            <item index="10" class="java.lang.String" itemvalue="done" />
+            <item index="11" class="java.lang.String" itemvalue="expr" />
+            <item index="12" class="java.lang.String" itemvalue="transformers" />
+            <item index="13" class="java.lang.String" itemvalue="botocore" />
+            <item index="14" class="java.lang.String" itemvalue="pyttsx3" />
+            <item index="15" class="java.lang.String" itemvalue="rich" />
+            <item index="16" class="java.lang.String" itemvalue="torch" />
+            <item index="17" class="java.lang.String" itemvalue="praw" />
+            <item index="18" class="java.lang.String" itemvalue="toml" />
+            <item index="19" class="java.lang.String" itemvalue="boto3" />
+            <item index="20" class="java.lang.String" itemvalue="pytube" />
+            <item index="21" class="java.lang.String" itemvalue="translators" />
+            <item index="22" class="java.lang.String" itemvalue="playwright" />
+            <item index="23" class="java.lang.String" itemvalue="moviepy" />
+            <item index="24" class="java.lang.String" itemvalue="gTTS" />
+            <item index="25" class="java.lang.String" itemvalue="Pillow" />
+            <item index="26" class="java.lang.String" itemvalue="poetry-core" />
+            <item index="27" class="java.lang.String" itemvalue="scipy" />
+            <item index="28" class="java.lang.String" itemvalue="threadpoolctl" />
+            <item index="29" class="java.lang.String" itemvalue="trove-classifiers" />
+            <item index="30" class="java.lang.String" itemvalue="scikit-learn" />
+            <item index="31" class="java.lang.String" itemvalue="more-itertools" />
+            <item index="32" class="java.lang.String" itemvalue="dulwich" />
+            <item index="33" class="java.lang.String" itemvalue="virtualenv" />
+            <item index="34" class="java.lang.String" itemvalue="charset-normalizer" />
+            <item index="35" class="java.lang.String" itemvalue="urllib3" />
+            <item index="36" class="java.lang.String" itemvalue="msgpack" />
+            <item index="37" class="java.lang.String" itemvalue="poetry" />
+            <item index="38" class="java.lang.String" itemvalue="lupa" />
+            <item index="39" class="java.lang.String" itemvalue="Django" />
+            <item index="40" class="java.lang.String" itemvalue="beautifulsoup4" />
+            <item index="41" class="java.lang.String" itemvalue="pandas" />
+            <item index="42" class="java.lang.String" itemvalue="requests-oauthlib" />
+            <item index="43" class="java.lang.String" itemvalue="requests" />
+            <item index="44" class="java.lang.String" itemvalue="gunicorn" />
+            <item index="45" class="java.lang.String" itemvalue="django" />
+            <item index="46" class="java.lang.String" itemvalue="discord.py" />
+            <item index="47" class="java.lang.String" itemvalue="psycopg2-binary" />
+            <item index="48" class="java.lang.String" itemvalue="flower" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E501" />
+          <option value="E301" />
+          <option value="E302" />
+          <option value="W191" />
+          <option value="E117" />
+          <option value="E712" />
+          <option value="E265" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N801" />
+          <option value="N802" />
+          <option value="N806" />
+          <option value="N803" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyTypeCheckerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="django.contrib.auth.models.User.in_contest" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

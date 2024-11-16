@@ -1,6 +1,6 @@
 [package]
 name = "codepack"
-version = "0.6.5"
+version = "0.6.6"
 edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
@@ -21,6 +21,7 @@ anyhow = "1.0.93"
 ignore = "0.4.23"
 indicatif = "0.17.9"
 prettytable = "0.10.0"
+globset = "0.4.15"
 
 [profile.release]
 lto = true

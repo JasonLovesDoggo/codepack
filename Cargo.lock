@@ -136,10 +136,11 @@ checksum = "afb84c814227b90d6895e01398aee0d8033c00e7466aca416fb6a8e0eb19d8a7"
 
 [[package]]
 name = "codepack"
-version = "0.6.5"
+version = "0.6.6"
 dependencies = [
  "anyhow",
  "clap",
+ "globset",
  "ignore",
  "indicatif",
  "prettytable",

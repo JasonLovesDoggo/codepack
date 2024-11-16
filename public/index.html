@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" id="oranda" class="dark">
+  <head>
+    <title>codedump</title>
+    
+      <meta property="og:url" content="codepack.jasoncameron.dev" />
+    
+    
+      <link rel="icon" href="/favicon.ico" />
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      <meta name="description" content="A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis." />
+      <meta property="og:description" content="A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis." />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="codedump" />
+    
+    
+    
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+    <link rel="stylesheet" href="/oranda-v0.6.1.css" />
+    
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-body">
+        
+          <div class="repo_banner">
+            <a href="https://github.com/JasonLovesDoggo/codepack">
+              <div class="github-icon" aria-hidden="true"></div>
+              Check out our GitHub!
+            </a>
+          </div>
+        
+
+        <main>
+          <header>
+            
+            <h1 class="title">codedump</h1>
+            
+  <nav class="nav">
+    <ul>
+      <li><a href="/">Home</a></li>
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li><a href="/changelog/">Changelog</a></li>
+      
+    </ul>
+  </nav>
+
+          </header>
+
+          
+
+
+    <h1>CodeDump 📚</h1>
+<p>A blazingly fast, memory-efficient tool to compile your entire codebase into a single text file, perfect for feeding into Large Language Models (LLMs). CodeDump respects your .gitignore patterns and intelligently handles binary files.</p>
+<p><a href="https://crates.io/crates/codedump" rel="noopener noreferrer"><img src="https://img.shields.io/crates/v/codedump.svg" alt="Crates.io"></a>
+<a href="https://opensource.org/licenses/MIT" rel="noopener noreferrer"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></p>
+<h2>✨ Features</h2>
+<ul>
+<li>🚀 <strong>Blazingly Fast</strong>: Utilizes parallel processing and memory mapping</li>
+<li>📝 <strong>Git-Aware</strong>: Fully respects .gitignore patterns (including nested ones)</li>
+<li>🧠 <strong>LLM-Friendly</strong>: Generates clean, formatted output with clear file boundaries</li>
+<li>💡 <strong>Smart Processing</strong>: Automatically detects and skips binary files</li>
+<li>🛡️ <strong>Memory Efficient</strong>: Streams large files instead of loading them entirely into memory</li>
+<li>📦 <strong>Zero Config</strong>: Works out of the box with sensible defaults</li>
+</ul>
+<h2>🚀 Installation</h2>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">cargo install codedump
+</span></pre>
+
+<p>Or build from source:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">git clone https://github.com/yourusername/codedump
+</span><span style="color:#82aaff;">cd codedump
+</span><span style="color:#82aaff;">cargo build</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">release
+</span></pre>
+
+<h2>📖 Usage</h2>
+<p>Basic usage:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codedump /path/to/source/directory output.txt
+</span></pre>
+
+<p>The output file will contain all text files from your directory, with clear headers separating each file:</p>
+<pre style="background-color:#263238;"><span style="color:#eeffff;">=== File: src/main.rs ===
+</span><span style="color:#eeffff;">[content of main.rs]
+</span><span style="color:#eeffff;">
+</span><span style="color:#eeffff;">=== File: src/lib.rs ===
+</span><span style="color:#eeffff;">[content of lib.rs]
+</span></pre>
+
+<h2>🔧 Technical Details</h2>
+<p>CodeDump employs several optimization techniques:</p>
+<ul>
+<li><strong>Parallel Processing</strong>: Uses rayon for concurrent directory walking</li>
+<li><strong>Memory Mapping</strong>: Efficiently handles large files using mmap</li>
+<li><strong>Buffered I/O</strong>: Optimized buffer sizes for maximum performance</li>
+<li><strong>Channel-based Communication</strong>: Efficient thread communication with crossbeam</li>
+<li><strong>Fast Synchronization</strong>: Uses parking_lot mutexes for better performance</li>
+</ul>
+<h2>🔍 Binary File Detection</h2>
+<p>CodeDump automatically detects and skips binary files using a sophisticated heuristic:</p>
+<ul>
+<li>Checks for null bytes</li>
+<li>Analyzes the ratio of non-ASCII characters</li>
+<li>Samples only the beginning of large files for quick detection</li>
+</ul>
+<h2>🛠️ Building</h2>
+<p>Requirements:</p>
+<ul>
+<li>Rust 1.70.0 or higher</li>
+<li>Cargo</li>
+</ul>
+<p>Dependencies:</p>
+<pre style="background-color:#263238;"><span style="color:#89ddff;">[dependencies]
+</span><span style="color:#f07178;">ignore </span><span style="color:#89ddff;">= "</span><span style="color:#c3e88d;">0.4</span><span style="color:#89ddff;">"
+</span><span style="color:#f07178;">rayon </span><span style="color:#89ddff;">= "</span><span style="color:#c3e88d;">1.8</span><span style="color:#89ddff;">"
+</span><span style="color:#f07178;">memmap2 </span><span style="color:#89ddff;">= "</span><span style="color:#c3e88d;">0.9</span><span style="color:#89ddff;">"
+</span><span style="color:#f07178;">parking_lot </span><span style="color:#89ddff;">= "</span><span style="color:#c3e88d;">0.12</span><span style="color:#89ddff;">"
+</span><span style="color:#f07178;">crossbeam-channel </span><span style="color:#89ddff;">= "</span><span style="color:#c3e88d;">0.5</span><span style="color:#89ddff;">"
+</span></pre>
+
+<h2>🤝 Contributing</h2>
+<p>Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.</p>
+<ol>
+<li>Fork the Project</li>
+<li>Create your Feature Branch (<code>git checkout -b feature/AmazingFeature</code>)</li>
+<li>Commit your Changes (<code>git commit -m 'Add some AmazingFeature'</code>)</li>
+<li>Push to the Branch (<code>git push origin feature/AmazingFeature</code>)</li>
+<li>Open a Pull Request</li>
+</ol>
+<h2>📜 License</h2>
+<p>This project is licensed under the MIT License - see the <a href="LICENSE" rel="noopener noreferrer">LICENSE</a> file for details.</p>
+<h2>🙏 Acknowledgments</h2>
+<ul>
+<li>The <code>ignore</code> crate for excellent .gitignore handling</li>
+<li>The Rust community for amazing async and parallel processing tools</li>
+</ul>
+<h2>⚡ Performance</h2>
+<p>On a typical modern system:</p>
+<ul>
+<li>Processing 1GB of source code: ~2-3 seconds</li>
+<li>Memory usage: Typically under 50MB for most codebases</li>
+<li>CPU usage: Efficiently utilizes all available cores</li>
+</ul>
+<h2>🔮 Future Plans</h2>
+<ul>
+<li> Add support for custom ignore patterns</li>
+<li> Implement incremental updates</li>
+<li> Add compression options</li>
+<li> Support for additional output formats</li>
+<li> Directory statistics and reporting</li>
+</ul>
+<h2>📫 Contact</h2>
+<p>Create an issue in the GitHub repository or reach out to [<a href="mailto:your-email@example.com" rel="noopener noreferrer">your-email@example.com</a>]</p>
+<hr>
+<p>Made with ❤️ in Rust</p>
+
+
+
+        </main>
+      </div>
+
+      <footer>
+        
+          <a href="https://github.com/JasonLovesDoggo/codepack"><div class="github-icon" aria-hidden="true"></div></a>
+        
+        <span>
+          codedump, GPL-3
+        </span>
+      </footer>
+    </div>
+
+    
+    
+
+    
+
+
+  </body>
+</html>

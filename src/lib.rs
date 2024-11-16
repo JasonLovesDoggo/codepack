@@ -6,13 +6,15 @@ use std::{fs::{read_to_string, File}, io::{BufWriter, Write}, path::{Path, PathB
 pub struct DirectoryProcessor {
     extensions: Arc<Vec<String>>,
     suppress_prompt: bool,
+    output: String
 }
 
 impl DirectoryProcessor {
-    pub fn new(extensions: Vec<String>, suppress_prompt: bool) -> Self {
+    pub fn new(extensions: Vec<String>, suppress_prompt: bool, output: String) -> Self {
         Self {
             extensions: Arc::new(extensions),
             suppress_prompt,
+            output
         }
     }
 
@@ -66,7 +68,7 @@ impl DirectoryProcessor {
 
         pb.set_length(file_paths.len() as u64); // Set the length of the progress bar
 
-        let output_file = File::create("output.txt")?;
+        let output_file = File::create(self.output.clone())?;
         let mut writer = BufWriter::new(output_file);
 
         // Write the prompt if it's not suppressed

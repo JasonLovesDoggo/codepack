@@ -1,7 +1,7 @@
 use anyhow::{Result};
 use clap::{Parser};
 use prettytable::{Table, Row, Cell};
-use std::{path::{Path, PathBuf}};
+use std::{path::{Path}};
 use codepack::DirectoryProcessor;
 
 #[derive(Parser, Debug)]
@@ -25,13 +25,23 @@ struct Args {
 }
 
 fn main() -> Result<()> {
-    let args = Args::parse();
+    let mut args = Args::parse();
     let directory_path = Path::new(&args.directory_path);
+    
+    if !args.output.is_some() {
+        args.output = Some({
+            let directory_name = directory_path
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("directory");
 
-    let processor = DirectoryProcessor::new(args.extensions, args.suppress_prompt);
+            // Use the number of files processed to build the description
+            format!("{}_code_pack.txt", directory_name)
+        });
+    }
 
-    // Parse output path if provided
-    let output_path = args.output.map(PathBuf::from);
+    let processor = DirectoryProcessor::new(args.extensions, args.suppress_prompt, args.output.clone().unwrap());
+
 
     // Start the timer
     let start_time = std::time::Instant::now();
@@ -56,20 +66,10 @@ fn main() -> Result<()> {
     ]));
     table.printstd();
 
-    // Write the output to the file with description of the output
-    let output_path = output_path.unwrap_or_else(|| {
-        let directory_name = directory_path
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("directory");
-
-        // Use the number of files processed to build the description
-        let file_count = files.len();
-        PathBuf::from(format!("{}_{}files.txt", directory_name, file_count))
-    });
+   
 
     // Print output path
-    println!("\nOutput written to: {}", output_path.display());
+    println!("\nOutput written to: {:?}", args.output.unwrap());
 
     Ok(())
 }

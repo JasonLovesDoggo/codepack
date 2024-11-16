@@ -1,6 +1,6 @@
-# `codepack` (v0.6.3)
+# `codepack`
 
-[![crates.io](https://img.shields.io/crates/v/codepack.svg)](https://crates.io/crates/codepack)
+[![crates.io](https://img.shields.io/crates/v/codepack.svg)](https://crates.io/crates/codepack) [![Web](https://github.com/JasonLovesDoggo/codepack/actions/workflows/web.yml/badge.svg)](https://github.com/JasonLovesDoggo/codepack/actions/workflows/web.yml)  [![Release](https://github.com/JasonLovesDoggo/codepack/actions/workflows/release.yml/badge.svg)](https://github.com/JasonLovesDoggo/codepack/actions/workflows/release.yml)
 
 **`codepack`** transforms directories into *LLM-friendly* text files.
 

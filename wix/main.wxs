@@ -173,7 +173,7 @@
         <!--<Icon Id='ProductICO' SourceFile='wix\Product.ico'/>-->
         <!--<Property Id='ARPPRODUCTICON' Value='ProductICO' />-->
 
-        <Property Id='ARPHELPLINK' Value='codepack.jasoncameron.dev'/>
+        <Property Id='ARPHELPLINK' Value='https://codepack.jasoncameron.dev'/>
         
         <UI>
             <UIRef Id='WixUI_FeatureTree'/>

@@ -5,9 +5,9 @@ edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
 authors = ["Jason Cameron <git@jasoncameron.dev>"]
-license = "GPL-3"
+license = "MIT"
 description = "A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis."
-homepage = "codepack.jasoncameron.dev"
+homepage = "https://codepack.jasoncameron.dev"
 
 [package.metadata.wix]
 upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"
@@ -17,7 +17,6 @@ eula = false
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
-chrono = "0.4.38"
 anyhow = "1.0.93"
 ignore = "0.4.23"
 indicatif = "0.17.9"

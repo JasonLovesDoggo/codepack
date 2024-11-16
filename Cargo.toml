@@ -10,12 +10,6 @@ description = "A *lightning-fast* tool that transforms a directory into a single
 homepage = "https://codepack.jasoncameron.dev"
 readme = "README.md"
 
-[package.metadata.wix]
-upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"
-path-guid = "40D06AA7-224A-44A2-B663-F949EA3A47EC"
-license = false
-eula = false
-
 [dependencies]
 clap = { version = "4.5.21", features = ["derive"] }
 anyhow = "1.0.93"
@@ -23,6 +17,19 @@ ignore = "0.4.23"
 indicatif = "0.17.9"
 prettytable = "0.10.0"
 globset = "0.4.15"
+
+[dev-dependencies]
+tempfile = "3.14.0"
+
+
+[package.metadata.wix]
+upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"
+path-guid = "40D06AA7-224A-44A2-B663-F949EA3A47EC"
+license = false
+eula = false
+
+
+
 
 [profile.release]
 lto = true
@@ -53,4 +60,3 @@ targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-pc-windows-msv
 pr-run-mode = "plan"
 # Whether to install an updater program
 install-updater = true
-

@@ -49,6 +49,9 @@ impl DirectoryProcessor {
     }
 
     pub fn should_process_file(&self, path: &Path) -> bool {
+        if path.to_str().unwrap().is_empty() {
+            return false;
+        }
         if self.extensions.is_empty() && self.excluded_matchers.is_empty() {
             return true;
         }

@@ -1,9 +1,9 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use globset::{GlobBuilder, GlobMatcher};
 use ignore::WalkBuilder;
 use indicatif::{ProgressBar, ProgressStyle};
 use std::{
-    fs::{read_to_string, File},
+    fs::File,
     io::{BufWriter, Write},
     path::{Path, PathBuf},
     sync::Arc,
@@ -22,7 +22,6 @@ impl DirectoryProcessor {
             .into_iter()
             .map(|pattern| GlobBuilder::new(&pattern).build().unwrap().compile_matcher())
             .collect();
-
 
         Self {
             extensions: Arc::new(extensions),
@@ -49,11 +48,15 @@ impl DirectoryProcessor {
         writer: &mut BufWriter<File>,
         pb: &ProgressBar,
     ) -> Result<()> {
-        let content = read_to_string(path)
-            .with_context(|| format!("Failed to read file: {}", path.display()))?;
-
-        writeln!(writer, "\n--- {} ---", path.display())?;
-        writeln!(writer, "{}", content)?;
+        match std::fs::read_to_string(path) {
+            Ok(content) => {
+                writeln!(writer, "\n--- {} ---", path.display())?;
+                writeln!(writer, "{}", content)?;
+            }
+            Err(err) => {
+                eprintln!("Non-UTF-8 file or read error for {}: {}", path.display(), err);
+            }
+        }
 
         pb.inc(1);
 

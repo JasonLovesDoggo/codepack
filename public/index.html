@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" id="oranda" class="dark">
   <head>
-    <title>codedump</title>
+    <title>codepack</title>
     
       <meta property="og:url" content="codepack.jasoncameron.dev" />
     
@@ -15,7 +15,7 @@
       <meta property="og:description" content="A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis." />
     
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="codedump" />
+    <meta property="og:title" content="codepack" />
     
     
     
@@ -39,7 +39,7 @@
         <main>
           <header>
             
-            <h1 class="title">codedump</h1>
+            <h1 class="title">codepack</h1>
             
   <nav class="nav">
     <ul>
@@ -64,9 +64,9 @@
           
 
 
-    <h1>CodeDump 📚</h1>
-<p>A blazingly fast, memory-efficient tool to compile your entire codebase into a single text file, perfect for feeding into Large Language Models (LLMs). CodeDump respects your .gitignore patterns and intelligently handles binary files.</p>
-<p><a href="https://crates.io/crates/codedump" rel="noopener noreferrer"><img src="https://img.shields.io/crates/v/codedump.svg" alt="Crates.io"></a>
+    <h1>codepack 📚</h1>
+<p>A blazingly fast, memory-efficient tool to compile your entire codebase into a single text file, perfect for feeding into Large Language Models (LLMs). codepack respects your .gitignore patterns and intelligently handles binary files.</p>
+<p><a href="https://crates.io/crates/codepack" rel="noopener noreferrer"><img src="https://img.shields.io/crates/v/codepack.svg" alt="Crates.io"></a>
 <a href="https://opensource.org/licenses/MIT" rel="noopener noreferrer"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></p>
 <h2>✨ Features</h2>
 <ul>
@@ -78,18 +78,18 @@
 <li>📦 <strong>Zero Config</strong>: Works out of the box with sensible defaults</li>
 </ul>
 <h2>🚀 Installation</h2>
-<pre style="background-color:#263238;"><span style="color:#82aaff;">cargo install codedump
+<pre style="background-color:#263238;"><span style="color:#82aaff;">cargo install codepack
 </span></pre>
 
 <p>Or build from source:</p>
-<pre style="background-color:#263238;"><span style="color:#82aaff;">git clone https://github.com/yourusername/codedump
-</span><span style="color:#82aaff;">cd codedump
+<pre style="background-color:#263238;"><span style="color:#82aaff;">git clone https://github.com/yourusername/codepack
+</span><span style="color:#82aaff;">cd codepack
 </span><span style="color:#82aaff;">cargo build</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">release
 </span></pre>
 
 <h2>📖 Usage</h2>
 <p>Basic usage:</p>
-<pre style="background-color:#263238;"><span style="color:#82aaff;">codedump /path/to/source/directory output.txt
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack /path/to/source/directory output.txt
 </span></pre>
 
 <p>The output file will contain all text files from your directory, with clear headers separating each file:</p>
@@ -101,7 +101,7 @@
 </span></pre>
 
 <h2>🔧 Technical Details</h2>
-<p>CodeDump employs several optimization techniques:</p>
+<p>codepack employs several optimization techniques:</p>
 <ul>
 <li><strong>Parallel Processing</strong>: Uses rayon for concurrent directory walking</li>
 <li><strong>Memory Mapping</strong>: Efficiently handles large files using mmap</li>
@@ -110,7 +110,7 @@
 <li><strong>Fast Synchronization</strong>: Uses parking_lot mutexes for better performance</li>
 </ul>
 <h2>🔍 Binary File Detection</h2>
-<p>CodeDump automatically detects and skips binary files using a sophisticated heuristic:</p>
+<p>codepack automatically detects and skips binary files using a sophisticated heuristic:</p>
 <ul>
 <li>Checks for null bytes</li>
 <li>Analyzes the ratio of non-ASCII characters</li>
@@ -177,7 +177,7 @@
           <a href="https://github.com/JasonLovesDoggo/codepack"><div class="github-icon" aria-hidden="true"></div></a>
         
         <span>
-          codedump, GPL-3
+          codepack, GPL-3
         </span>
       </footer>
     </div>

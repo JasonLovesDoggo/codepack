@@ -1,12 +1,11 @@
 use anyhow::{Result};
 use clap::{Parser};
-use chrono::Local;
 use prettytable::{Table, Row, Cell};
 use std::{path::{Path, PathBuf}};
-use codedump::DirectoryProcessor;
+use codepack::DirectoryProcessor;
 
 #[derive(Parser, Debug)]
-#[command(name = "codedump")]
+#[command(name = "codepack")]
 #[command(about = "Convert local directory contents into a single text file, useful for processing by an LLM.")]
 struct Args {
     /// Path to the local directory (first argument)

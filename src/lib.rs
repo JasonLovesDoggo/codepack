@@ -1,3 +1,5 @@
+mod constants;
+
 use anyhow::Result;
 use globset::{GlobBuilder, GlobMatcher};
 use ignore::WalkBuilder;
@@ -5,9 +7,10 @@ use indicatif::{ProgressBar, ProgressStyle};
 use std::{
     fs::File,
     io::{BufWriter, Write},
-    path::{Path, PathBuf},
+    path::{Path},
     sync::Arc,
 };
+use crate::constants::{DEFAULT_EXCLUSIONS, UNSUPPORTED_EXTENSIONS};
 
 pub struct DirectoryProcessor {
     extensions: Arc<Vec<String>>,
@@ -16,8 +19,22 @@ pub struct DirectoryProcessor {
     output: String,
 }
 
+fn get_default_exclusions() -> Vec<String> {
+    DEFAULT_EXCLUSIONS.iter().map(|s| s.to_string()).collect()
+}
+
+fn create_exclusions(excluded_files: Vec<String>) -> Vec<String> {
+    let mut exclusions = get_default_exclusions();
+    exclusions.extend(excluded_files);
+    exclusions.extend(UNSUPPORTED_EXTENSIONS.iter().map(|s| format!("*.{}", s)));
+
+    exclusions
+}
+
+
 impl DirectoryProcessor {
     pub fn new(extensions: Vec<String>, excluded_files: Vec<String>, suppress_prompt: bool, output: String) -> Self {
+        let excluded_files = create_exclusions(excluded_files);
         let excluded_matchers: Vec<GlobMatcher> = excluded_files
             .into_iter()
             .map(|pattern| GlobBuilder::new(&pattern).build().unwrap().compile_matcher())
@@ -34,6 +51,11 @@ impl DirectoryProcessor {
     pub fn should_process_file(&self, path: &Path) -> bool {
         if self.extensions.is_empty() && self.excluded_matchers.is_empty() {
             return true;
+        }
+
+        // If there are no specified extensions, process all files that are not excluded.
+        if self.extensions.is_empty() {
+            return !self.excluded_matchers.iter().any(|matcher| matcher.is_match(path));
         }
 
         path.extension()
@@ -63,7 +85,7 @@ impl DirectoryProcessor {
         Ok(())
     }
 
-    pub fn run(&self, directory_path: &Path) -> Result<Vec<PathBuf>> {
+    pub fn run(&self, directory_path: &Path) -> Result<usize> {
         let pb = ProgressBar::new(0);
         pb.set_style(
             ProgressStyle::default_bar()
@@ -71,16 +93,34 @@ impl DirectoryProcessor {
                 .progress_chars("=>-"),
         );
 
-        let walker = WalkBuilder::new(directory_path).standard_filters(true).build();
+        // Walk the directory, filtering files and directories
+        let walker = WalkBuilder::new(directory_path)
+            .standard_filters(true)
+            .build();
 
-        let file_paths: Vec<PathBuf> = walker
-            .filter_map(|entry| entry.ok())
-            .filter(|entry| {
-                let path = entry.path();
-                path.is_file() && self.should_process_file(path)
-            })
-            .map(|entry| entry.path().to_owned())
-            .collect();
+        let mut file_paths = Vec::new();
+
+        for entry in walker {
+            let entry = match entry {
+                Ok(e) => e,
+                Err(err) => {
+                    eprintln!("Error reading entry: {}", err);
+                    continue;
+                }
+            };
+
+            let path = entry.path();
+
+            // Skip directories matching exclusion patterns
+            if path.is_dir() && self.excluded_matchers.iter().any(|matcher| matcher.is_match(path)) {
+                continue; // Do not process this directory
+            }
+
+            // Process files matching criteria
+            if path.is_file() && self.should_process_file(path) {
+                file_paths.push(path.to_owned());
+            }
+        }
 
         pb.set_length(file_paths.len() as u64);
 
@@ -92,12 +132,12 @@ impl DirectoryProcessor {
             writeln!(writer, "Each file is separated by a line with its path.\n")?;
         }
 
-        for path in file_paths.iter().clone() {
-            self.process_and_write_file(&path, &mut writer, &pb)?;
+        for path in &file_paths {
+            self.process_and_write_file(path, &mut writer, &pb)?;
         }
 
         pb.finish_with_message("Directory processing complete");
 
-        Ok(file_paths)
+        Ok(file_paths.len())
     }
 }

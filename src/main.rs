@@ -18,9 +18,8 @@ struct Args {
     /// File extensions to include (e.g., -e rs -e toml)
     #[arg(short = 'e', long = "extension")]
     extensions: Vec<String>,
-    
-    /// Files to exclude from the output, by name/pattern (e.g. -x *.lock -x LICENSE)
-    #[arg(short, long)]
+
+    /// Files to exclude from the output, by name/pattern (e.g. -x *.lock -x LICENSE#[arg(short = 'x', long)]
     excluded_files: Vec<String>,
 
     /// Suppress the output prompt (description of file formatting)
@@ -28,7 +27,6 @@ struct Args {
     suppress_prompt: bool,
 }
 
-const DEFAULT_EXCLUSIONS: [&str; 3] = ["*.lock", "*LICENSE*", ".gitignore"];
 
 fn main() -> Result<()> {
     let mut args = Args::parse();
@@ -44,10 +42,6 @@ fn main() -> Result<()> {
             // Use the number of files processed to build the description
             format!("{}_code_pack.txt", directory_name)
         });
-    }
-    
-    if !args.excluded_files.is_empty() {
-        args.excluded_files.extend(DEFAULT_EXCLUSIONS.iter().map(|s| s.to_string()));
     }
 
     let processor = DirectoryProcessor::new(args.extensions, args.excluded_files, args.suppress_prompt, args.output.clone().unwrap());
@@ -72,7 +66,7 @@ fn main() -> Result<()> {
     ]));
     table.add_row(Row::new(vec![
         Cell::new("Number of files processed"),
-        Cell::new(&files.len().to_string()),
+        Cell::new(&files.to_string()),
     ]));
     table.printstd();
 

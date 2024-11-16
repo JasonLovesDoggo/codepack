@@ -1,6 +1,6 @@
 [package]
 name = "codepack"
-version = "0.6.6"
+version = "0.8.0"
 edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
@@ -8,6 +8,7 @@ authors = ["Jason Cameron <git@jasoncameron.dev>"]
 license = "MIT"
 description = "A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis."
 homepage = "https://codepack.jasoncameron.dev"
+readme = "README.md"
 
 [package.metadata.wix]
 upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"

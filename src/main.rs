@@ -5,7 +5,7 @@ use std::{path::{Path}};
 use codepack::DirectoryProcessor;
 
 #[derive(Parser, Debug)]
-#[command(name = "codepack", version, about)]
+#[command(name = "codepack", version)]
 #[command(about = "Convert local directory contents into a single text file, useful for processing by an LLM.")]
 struct Args {
     /// Path to the local directory (first argument)
@@ -16,7 +16,7 @@ struct Args {
     output: Option<String>,
 
     /// File extensions to include (e.g., -e rs -e toml)
-    #[arg(short = 'e', long = "extension")]
+    #[arg(short = 'e', long = "extension",  action = clap::ArgAction::Append)]
     extensions: Vec<String>,
 
     /// Files to exclude from the output, by name/pattern (e.g. -x *.lock -x LICENSE -x node_modules/)

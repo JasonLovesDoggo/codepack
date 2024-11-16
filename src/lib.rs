@@ -52,19 +52,24 @@ impl DirectoryProcessor {
         if path.to_str().unwrap().is_empty() {
             return false;
         }
-        if self.extensions.is_empty() && self.excluded_matchers.is_empty() {
+
+        let file_name = path.file_name().and_then(|name| name.to_str());
+        if let Some(name) = file_name {
+            // Skip files matching exclusion patterns
+            if self.excluded_matchers.iter().any(|matcher| matcher.is_match(name)) {
+                return false;
+            }
+        }
+
+        // If extensions are not specified, process all files that aren't excluded
+        if self.extensions.is_empty() {
             return true;
         }
 
-        // If there are no specified extensions, process all files that are not excluded.
-        if self.extensions.is_empty() {
-            return !self.excluded_matchers.iter().any(|matcher| matcher.is_match(path));
-        }
-
+        // Match files by extension and ensure they are not excluded
         path.extension()
             .and_then(|ext| ext.to_str())
             .map_or(false, |ext| self.extensions.iter().any(|e| e == ext))
-            && !self.excluded_matchers.iter().any(|matcher| matcher.is_match(path))
     }
 
     pub fn process_and_write_file(

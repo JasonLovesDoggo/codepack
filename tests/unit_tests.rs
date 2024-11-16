@@ -29,7 +29,12 @@ fn test_should_process_file_excluded_file() {
 }
 
 
-
+#[test]
+fn test_should_process_file_excluded_file_by_name() {
+    let processor = DirectoryProcessor::new(vec![], vec!["status".to_string()], false, String::new());
+    let path = Path::new("/home/json/code/src/status");
+    assert!(!processor.should_process_file(path));
+}
 
 
 #[test]

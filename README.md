@@ -67,6 +67,6 @@ codepack /path/to/my/code -e rs -e toml
 ## Contributing
 We welcome contributions to codepack! Please feel free to submit issues or pull requests on GitHub.
 
-License
+## License
 codepack is distributed under the terms of the GPL-3.0 License. See the [LICENSE](./LICENSE) file for details.
 

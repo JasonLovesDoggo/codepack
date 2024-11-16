@@ -19,7 +19,8 @@ struct Args {
     #[arg(short = 'e', long = "extension")]
     extensions: Vec<String>,
 
-    /// Files to exclude from the output, by name/pattern (e.g. -x *.lock -x LICENSE#[arg(short = 'x', long)]
+    /// Files to exclude from the output, by name/pattern (e.g. -x *.lock -x LICENSE -x node_modules/)
+    #[arg(short = 'x', long)]
     excluded_files: Vec<String>,
 
     /// Suppress the output prompt (description of file formatting)

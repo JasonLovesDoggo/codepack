@@ -32,7 +32,7 @@ on:
   # when you want the docs to update.
   push:
     branches:
-      - main
+      - master
 
   # Whenever a workflow called "Release" completes, update the docs!
   #

@@ -1,4 +1,4 @@
-# `codepack` (v0.6.2)
+# `codepack` (v0.6.3)
 
 [![crates.io](https://img.shields.io/crates/v/codepack.svg)](https://crates.io/crates/codepack)
 

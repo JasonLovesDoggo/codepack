@@ -5,13 +5,13 @@ use std::{path::{Path}};
 use codepack::DirectoryProcessor;
 
 #[derive(Parser, Debug)]
-#[command(name = "codepack")]
+#[command(name = "codepack", version, about)]
 #[command(about = "Convert local directory contents into a single text file, useful for processing by an LLM.")]
 struct Args {
     /// Path to the local directory (first argument)
     directory_path: String,
 
-    /// Output file path (optional)
+    /// Output file path (optional)author
     #[arg(short, long)]
     output: Option<String>,
 

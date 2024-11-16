@@ -3,23 +3,33 @@ name = "codedump"
 version = "0.1.0"
 edition = "2021"
 
+repository = "https://github.com/JasonLovesDoggo/codepack"
+authors = ["Jason Cameron <git@jasoncameron.dev>"]
+license = "GPL-3"
+description = "A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis."
+homepage = "codepack.jasoncameron.dev"
+
+[package.metadata.wix]
+upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"
+path-guid = "40D06AA7-224A-44A2-B663-F949EA3A47EC"
+license = false
+eula = false
+
 [dependencies]
-ignore = "0.4"
-tokio = { version = "1.32", features = ["full"] }
-futures = "0.3"
 clap = { version = "4.4", features = ["derive"] }
-num_cpus = "1.16"
-path-slash = "0.2"
-indicatif = "0.17"
-tracing = "0.1"
-tracing-subscriber = "0.3"
-humansize = "2.1"
-rayon = "1.10.0"
 chrono = "0.4.38"
 anyhow = "1.0.93"
+ignore = "0.4.23"
+indicatif = "0.17.9"
+prettytable = "0.10.0"
 
 [profile.release]
 lto = true
 codegen-units = 1
 panic = "abort"
 opt-level = 3
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

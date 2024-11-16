@@ -1,23 +1,16 @@
-use std::{
-    fs::{self, File},
-    io::{BufWriter, Write},
-    path::{Path, PathBuf},
-    sync::Arc,
-};
-use clap::Parser;
-use rayon::prelude::*;
-use ignore::Walk;
+use anyhow::{Result};
+use clap::{Parser};
 use chrono::Local;
-use anyhow::{Context, Result};
-use indicatif::{ProgressBar, ProgressStyle};
+use prettytable::{Table, Row, Cell};
+use std::{path::{Path, PathBuf}};
+use codedump::DirectoryProcessor;
 
 #[derive(Parser, Debug)]
-#[command(name = "repo-to-text")]
-#[command(about = "Convert local repository contents to a single text file")]
+#[command(name = "codedump")]
+#[command(about = "Convert local directory contents into a single text file, useful for processing by an LLM.")]
 struct Args {
-    /// Path to the local repository
-    #[arg(short, long)]
-    repo_path: String,
+    /// Path to the local directory (first argument)
+    directory_path: String,
 
     /// Output file path (optional)
     #[arg(short, long)]
@@ -26,103 +19,58 @@ struct Args {
     /// File extensions to include (e.g., -e rs -e toml)
     #[arg(short = 'e', long = "extension")]
     extensions: Vec<String>,
-}
 
-struct RepoProcessor {
-    extensions: Arc<Vec<String>>,
-}
-
-impl RepoProcessor {
-    fn new(extensions: Vec<String>) -> Self {
-        Self {
-            extensions: Arc::new(extensions),
-        }
-    }
-
-    fn should_process_file(&self, path: &Path) -> bool {
-        if self.extensions.is_empty() {
-            return true;
-        }
-
-        path.extension()
-            .and_then(|ext| ext.to_str())
-            .map(|ext| self.extensions.iter().any(|e| e == ext))
-            .unwrap_or(false)
-    }
-
-    fn process_repository(&self, repo_path: &Path) -> Result<Vec<(PathBuf, String)>> {
-        let pb = ProgressBar::new_spinner();
-        pb.set_style(
-            ProgressStyle::default_spinner()
-                .template("{spinner:.green} [{elapsed_precise}] {msg}")
-                .unwrap(),
-        );
-        pb.set_message("Processing repository...");
-
-        // Use rayon for parallel processing of files
-        let files: Result<Vec<_>> = Walk::new(repo_path)
-            .filter_map(|entry| entry.ok())
-            .filter(|entry| entry.file_type().map(|ft| ft.is_file()).unwrap_or(false))
-            .filter(|entry| self.should_process_file(entry.path()))
-            .par_bridge()
-            .map(|entry| {
-                let path = entry.path().to_owned();
-                let content = fs::read_to_string(&path)
-                    .with_context(|| format!("Failed to read file: {}", path.display()))?;
-                Ok((path, content))
-            })
-            .collect();
-
-        pb.finish_with_message("Repository processing complete");
-        files
-    }
-
-    fn write_output(&self, files: Vec<(PathBuf, String)>, output_path: &Path) -> Result<()> {
-        let file = File::create(output_path)?;
-        let mut writer = BufWriter::new(file);
-
-        writeln!(writer, "Repository Export")?;
-        writeln!(writer, "Generated at: {}", Local::now().format("%Y-%m-%d %H:%M:%S"))?;
-        writeln!(writer, "Number of files: {}\n", files.len())?;
-
-        for (path, content) in files {
-            writeln!(writer, "\n--- {} ---", path.display())?;
-            writeln!(writer, "{}\n", content)?;
-        }
-
-        writer.flush()?;
-        Ok(())
-    }
-
-    fn run(&self, args: Args) -> Result<()> {
-        let repo_path = Path::new(&args.repo_path);
-        if !repo_path.is_dir() {
-            anyhow::bail!("Repository path does not exist or is not a directory");
-        }
-
-        let files = self.process_repository(repo_path)?;
-
-        let output_path = match args.output {
-            Some(path) => PathBuf::from(path),
-            None => {
-                let timestamp = Local::now().format("%Y%m%d%H%M%S");
-                let repo_name = repo_path
-                    .file_name()
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("repo");
-                PathBuf::from(format!("{}_{}.txt", repo_name, timestamp))
-            }
-        };
-
-        self.write_output(files, &output_path)?;
-        println!("Output written to: {}", output_path.display());
-
-        Ok(())
-    }
+    /// Suppress the output prompt (description of file formatting)
+    #[arg(long)]
+    suppress_prompt: bool,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    let processor = RepoProcessor::new(args.extensions.clone());
-    processor.run(args)
+    let directory_path = Path::new(&args.directory_path);
+
+    let processor = DirectoryProcessor::new(args.extensions, args.suppress_prompt);
+
+    // Parse output path if provided
+    let output_path = args.output.map(PathBuf::from);
+
+    // Start the timer
+    let start_time = std::time::Instant::now();
+
+    // Run the processing
+    let files = processor.run(directory_path)?;
+
+    // Calculate elapsed time
+    let duration = start_time.elapsed();
+    let formatted_time = format!("{:?}", duration);
+    
+
+    // Output the stats and details in a pretty table
+    let mut table = Table::new();
+    table.add_row(Row::new(vec![
+        Cell::new("Total time taken"),
+        Cell::new(&formatted_time),
+    ]));
+    table.add_row(Row::new(vec![
+        Cell::new("Number of files processed"),
+        Cell::new(&files.len().to_string()),
+    ]));
+    table.printstd();
+
+    // Write the output to the file with description of the output
+    let output_path = output_path.unwrap_or_else(|| {
+        let directory_name = directory_path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("directory");
+
+        // Use the number of files processed to build the description
+        let file_count = files.len();
+        PathBuf::from(format!("{}_{}files.txt", directory_name, file_count))
+    });
+
+    // Print output path
+    println!("\nOutput written to: {}", output_path.display());
+
+    Ok(())
 }

@@ -34,6 +34,7 @@ struct Args {
 }
 
 fn main() -> Result<()> {
+    log::set_max_level(log::LevelFilter::Info);
     let mut args = Args::parse();
     let directory_path = Path::new(&args.directory_path);
 

@@ -11,6 +11,7 @@ use std::{
     path::Path,
     sync::Arc,
 };
+use log::debug;
 
 #[derive(Debug)]
 pub enum Filter {
@@ -80,6 +81,7 @@ impl DirectoryProcessor {
                 .iter()
                 .any(|matcher| matcher.is_match(name))
             {
+                debug!("Excluding file due to name pattern: {}", name);
                 return false;
             }
         }
@@ -89,8 +91,10 @@ impl DirectoryProcessor {
         // If there are no filters, and not excluded, always include
         if self.filters.is_empty() {
             if self.extensions.is_empty() {
+                debug!("Processing file without filters: {}", path_str);
                 return true;
             }
+            debug!("Checking extension for file: {}", path_str);
             return path
                 .extension()
                 .and_then(|ext| ext.to_str())
@@ -128,6 +132,7 @@ impl DirectoryProcessor {
 
         // If no extensions are specified, process all files that pass the filters
         if self.extensions.is_empty() {
+            debug!("Processing file with filters: {}", path_str);
             return true;
         }
 
@@ -136,6 +141,7 @@ impl DirectoryProcessor {
             .and_then(|ext| ext.to_str())
             .map_or(false, |ext| self.extensions.iter().any(|e| e == ext))
     }
+
     pub fn process_and_write_file(
         &self,
         path: &Path,
@@ -154,16 +160,17 @@ impl DirectoryProcessor {
             }
         };
 
-        if !self.filters.iter().any(|f| match f {
+        debug!("Writing content for file: {}", path.display());
+
+        // If there are no content filters, write the content
+        if self.filters.is_empty() || self.filters.iter().any(|f| match f {
             Filter::ContentContains(ref s) => content.contains(s),
             _ => false,
         }) {
-            return Ok(()); // Skip file if it doesn't match content filter
+            writeln!(writer, "\n--- {} ---", path.display())?;
+            writeln!(writer, "{}", content)?;
+            pb.inc(1);
         }
-
-        writeln!(writer, "\n--- {} ---", path.display())?;
-        writeln!(writer, "{}", content)?;
-        pb.inc(1);
 
         Ok(())
     }

@@ -23,19 +23,19 @@ fn test_should_process_file_included_extension() {
 }
 #[test]
 fn test_should_process_file_excluded_file() {
-    let processor = DirectoryProcessor::new(vec![], vec!["main.rs".to_string()], false, String::new());
+    let processor =
+        DirectoryProcessor::new(vec![], vec!["main.rs".to_string()], false, String::new());
     let path = Path::new("main.rs");
     assert!(!processor.should_process_file(path));
 }
 
-
 #[test]
 fn test_should_process_file_excluded_file_by_name() {
-    let processor = DirectoryProcessor::new(vec![], vec!["status".to_string()], false, String::new());
+    let processor =
+        DirectoryProcessor::new(vec![], vec!["status".to_string()], false, String::new());
     let path = Path::new("/home/json/code/src/status");
     assert!(!processor.should_process_file(path));
 }
-
 
 #[test]
 fn test_should_process_file_excluded_globed_file() {
@@ -43,6 +43,3 @@ fn test_should_process_file_excluded_globed_file() {
     let path = Path::new("script.py");
     assert!(!processor.should_process_file(path));
 }
-
-
-

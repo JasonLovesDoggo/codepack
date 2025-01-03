@@ -5,12 +5,8 @@ pub const UNSUPPORTED_EXTENSIONS: &'static [&'static str] = &[
     "mp3", "wmv", "wav", "aac", "flac", "ogg", "wma", "zip", // Audio
     "pyc", "pyd", "tar", "gz", "rar", "7z", "iso", "bin", "exe", "dll", "msi", "dmg", "pkg", "deb",
     "rpm", "apk", "jar", "war", "ear", "npz", "npy", "lib", "dat", // Archives and executables
-    "mo", "pdf", // Misc
+    "mo", "pdf",  // Misc
     "lock", //  Lock files (May not be human-readable)
 ];
-pub const DEFAULT_EXCLUSIONS: &'static [&'static str] = &[
-    "*LICENSE*",
-    ".gitignore",
-    "node_modules/",
-    ".git/",
-];
+pub const DEFAULT_EXCLUSIONS: &'static [&'static str] =
+    &["*LICENSE*", ".gitignore", "node_modules/", ".git/"];

@@ -1,5 +1,5 @@
 use codepack::DirectoryProcessor;
-use std::{fs};
+use std::fs;
 use tempfile::TempDir;
 
 #[test]
@@ -12,7 +12,12 @@ fn test_integration() -> Result<(), Box<dyn std::error::Error>> {
     fs::write(&test_file_path, "This is a test file.")?;
 
     // Run the codepack processor
-    let processor = DirectoryProcessor::new(vec![], vec![], false, output_file_path.to_str().unwrap().to_string());
+    let processor = DirectoryProcessor::new(
+        vec![],
+        vec![],
+        false,
+        output_file_path.to_str().unwrap().to_string(),
+    );
     processor.run(temp_dir.path())?;
 
     // Check the output file

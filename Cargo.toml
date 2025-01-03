@@ -1,6 +1,6 @@
 [package]
 name = "codepack"
-version = "0.9.2"
+version = "0.9.3"
 edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
@@ -21,15 +21,11 @@ globset = "0.4.15"
 [dev-dependencies]
 tempfile = "3.14.0"
 
-
 [package.metadata.wix]
 upgrade-guid = "76DE8F50-9B4A-47A2-80C0-30C7074AFD81"
 path-guid = "40D06AA7-224A-44A2-B663-F949EA3A47EC"
 license = false
 eula = false
-
-
-
 
 [profile.release]
 lto = true

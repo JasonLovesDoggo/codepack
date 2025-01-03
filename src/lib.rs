@@ -1,5 +1,6 @@
 mod constants;
 
+use crate::constants::{DEFAULT_EXCLUSIONS, UNSUPPORTED_EXTENSIONS};
 use anyhow::Result;
 use globset::{GlobBuilder, GlobMatcher};
 use ignore::WalkBuilder;
@@ -7,16 +8,23 @@ use indicatif::{ProgressBar, ProgressStyle};
 use std::{
     fs::File,
     io::{BufWriter, Write},
-    path::{Path},
+    path::Path,
     sync::Arc,
 };
-use crate::constants::{DEFAULT_EXCLUSIONS, UNSUPPORTED_EXTENSIONS};
+
+#[derive(Debug)]
+pub enum Filter {
+    FileName(String),        // Matches file name
+    PathContains(String),    // Matches a substring in the path
+    ContentContains(String), // Matches a substring in the file content
+}
 
 pub struct DirectoryProcessor {
     extensions: Arc<Vec<String>>,
     excluded_matchers: Arc<Vec<GlobMatcher>>,
     suppress_prompt: bool,
     output: String,
+    filters: Vec<Filter>,
 }
 
 fn get_default_exclusions() -> Vec<String> {
@@ -31,13 +39,23 @@ fn create_exclusions(excluded_files: Vec<String>) -> Vec<String> {
     exclusions
 }
 
-
 impl DirectoryProcessor {
-    pub fn new(extensions: Vec<String>, excluded_files: Vec<String>, suppress_prompt: bool, output: String) -> Self {
+    pub fn new(
+        extensions: Vec<String>,
+        excluded_files: Vec<String>,
+        suppress_prompt: bool,
+        output: String,
+        filters: Vec<Filter>,
+    ) -> Self {
         let excluded_files = create_exclusions(excluded_files);
         let excluded_matchers: Vec<GlobMatcher> = excluded_files
             .into_iter()
-            .map(|pattern| GlobBuilder::new(&pattern).build().unwrap().compile_matcher())
+            .map(|pattern| {
+                GlobBuilder::new(&pattern)
+                    .build()
+                    .unwrap()
+                    .compile_matcher()
+            })
             .collect();
 
         Self {
@@ -45,49 +63,106 @@ impl DirectoryProcessor {
             excluded_matchers: Arc::new(excluded_matchers),
             suppress_prompt,
             output,
+            filters,
         }
     }
-
     pub fn should_process_file(&self, path: &Path) -> bool {
-        if path.to_str().unwrap().is_empty() {
+        // Check if the path is empty
+        if path.to_str().unwrap_or("").is_empty() {
             return false;
         }
 
+        // Check file name for exclusion patterns
         let file_name = path.file_name().and_then(|name| name.to_str());
         if let Some(name) = file_name {
-            // Skip files matching exclusion patterns
-            if self.excluded_matchers.iter().any(|matcher| matcher.is_match(name)) {
+            if self
+                .excluded_matchers
+                .iter()
+                .any(|matcher| matcher.is_match(name))
+            {
                 return false;
             }
         }
 
-        // If extensions are not specified, process all files that aren't excluded
+        let path_str = path.to_string_lossy();
+
+        // If there are no filters, and not excluded, always include
+        if self.filters.is_empty() {
+            if self.extensions.is_empty() {
+                return true;
+            }
+            return path
+                .extension()
+                .and_then(|ext| ext.to_str())
+                .map_or(false, |ext| self.extensions.iter().any(|e| e == ext));
+        }
+
+        // Apply advanced filters. Now OR logic
+        let mut matched_filter = false;
+        for filter in &self.filters {
+            match filter {
+                Filter::FileName(pattern) => {
+                    if let Some(name) = file_name {
+                        if name.contains(pattern) {
+                            matched_filter = true;
+                            break; // If one filter matches, no need to check others for this type
+                        }
+                    }
+                }
+                Filter::PathContains(substring) => {
+                    if path_str.contains(substring) {
+                        matched_filter = true;
+                        break; // If one filter matches, no need to check others for this type
+                    }
+                }
+                Filter::ContentContains(_) => {
+                    matched_filter = true; // Content filter is checked later in process_and_write_file
+                    break;
+                }
+            }
+        }
+
+        if !matched_filter {
+            return false;
+        }
+
+        // If no extensions are specified, process all files that pass the filters
         if self.extensions.is_empty() {
             return true;
         }
 
-        // Match files by extension and ensure they are not excluded
+        // Match files by extension
         path.extension()
             .and_then(|ext| ext.to_str())
             .map_or(false, |ext| self.extensions.iter().any(|e| e == ext))
     }
-
     pub fn process_and_write_file(
         &self,
         path: &Path,
         writer: &mut BufWriter<File>,
         pb: &ProgressBar,
     ) -> Result<()> {
-        match std::fs::read_to_string(path) {
-            Ok(content) => {
-                writeln!(writer, "\n--- {} ---", path.display())?;
-                writeln!(writer, "{}", content)?;
-            }
+        let content = match std::fs::read_to_string(path) {
+            Ok(content) => content,
             Err(err) => {
-                eprintln!("Non-UTF-8 file or read error for {}: {}", path.display(), err);
+                eprintln!(
+                    "Non-UTF-8 file or read error for {}: {}",
+                    path.display(),
+                    err
+                );
+                return Err(err.into());
             }
+        };
+
+        if !self.filters.iter().any(|f| match f {
+            Filter::ContentContains(ref s) => content.contains(s),
+            _ => false,
+        }) {
+            return Ok(()); // Skip file if it doesn't match content filter
         }
 
+        writeln!(writer, "\n--- {} ---", path.display())?;
+        writeln!(writer, "{}", content)?;
         pb.inc(1);
 
         Ok(())
@@ -120,7 +195,12 @@ impl DirectoryProcessor {
             let path = entry.path();
 
             // Skip directories matching exclusion patterns
-            if path.is_dir() && self.excluded_matchers.iter().any(|matcher| matcher.is_match(path)) {
+            if path.is_dir()
+                && self
+                    .excluded_matchers
+                    .iter()
+                    .any(|matcher| matcher.is_match(path))
+            {
                 continue; // Do not process this directory
             }
 
@@ -136,7 +216,10 @@ impl DirectoryProcessor {
         let mut writer = BufWriter::new(output_file);
 
         if !self.suppress_prompt {
-            writeln!(writer, "This is a .txt file representing an entire directory's contents.")?;
+            writeln!(
+                writer,
+                "This is a .txt file representing an entire directory's contents."
+            )?;
             writeln!(writer, "Each file is separated by a line with its path.\n")?;
         }
 

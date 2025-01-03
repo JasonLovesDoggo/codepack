@@ -1,6 +1,6 @@
 [package]
 name = "codepack"
-version = "0.9.0"
+version = "0.9.1"
 edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
@@ -41,22 +41,3 @@ opt-level = 3
 [profile.dist]
 inherits = "release"
 lto = "thin"
-
-# Config for 'cargo dist'
-[workspace.metadata.dist]
-# Whether to consider the binaries in a package for distribution (defaults true)
-dist = true
-# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.25.1"
-# CI backends to support
-ci = ["github"]
-# Attestations to add to GitHub releases
-github-attestations = true
-# The installers to generate for each app
-installers = ["msi", "powershell", "shell"]
-# Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu"]
-# Publish jobs to run in CI
-pr-run-mode = "plan"
-# Whether to install an updater program
-install-updater = true

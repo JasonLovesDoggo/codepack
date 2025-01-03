@@ -1,0 +1,23 @@
+[workspace]
+members = ["cargo:."]
+
+# Config for 'dist'
+[dist]
+# Whether to consider the binaries in a package for distribution (defaults true)
+dist = true
+# The preferred dist version to use in CI (Cargo.toml SemVer syntax)
+cargo-dist-version = "0.25.1"
+# CI backends to support
+ci = "github"
+# Whether to enable GitHub Attestations
+github-attestations = true
+# The installers to generate for each app
+installers = ["shell", "powershell", "msi"]
+# Target platforms to build apps for (Rust target-triple syntax)
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+# Which actions to run on pull requests
+pr-run-mode = "plan"
+# Whether to install an updater program
+install-updater = true
+# Path that installers should place binaries in
+install-path = "CARGO_HOME"

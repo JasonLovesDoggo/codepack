@@ -94,7 +94,6 @@ fn main() -> Result<()> {
     ]));
     table.printstd();
 
-    // Print output path
     println!("\nOutput written to: {:?}", args.output.unwrap());
 
     Ok(())

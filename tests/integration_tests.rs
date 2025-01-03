@@ -13,15 +13,20 @@ fn test_integration() -> Result<(), Box<dyn std::error::Error>> {
 
     // Run the codepack processor
     let processor = DirectoryProcessor::new(
-        vec![],
+        vec!["txt".to_string()],
         vec![],
         false,
         output_file_path.to_str().unwrap().to_string(),
+        vec![],
     );
-    processor.run(temp_dir.path())?;
+    let files_processed = processor.run(temp_dir.path())?;
+
+    // Check the number of files processed
+    println!("Files processed: {}", files_processed);
 
     // Check the output file
     let output_content = fs::read_to_string(&output_file_path)?;
+    println!("Output content:\n{}", output_content);
     assert!(output_content.contains("This is a test file."));
 
     Ok(())

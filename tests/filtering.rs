@@ -90,7 +90,7 @@ fn test_should_process_file_combined_filters() {
     let path = Path::new("src/main.rs");
     assert!(processor.should_process_file(path));
 
-    let invalid_path = Path::new("src/lib.rs"); // Doesn't match FileName filter
+    let invalid_path = Path::new("awesome/lib.rs"); // Doesn't match FileName filter
     assert!(!processor.should_process_file(invalid_path));
 
     let invalid_extension_path = Path::new("src/main.py"); // Doesn't match extension

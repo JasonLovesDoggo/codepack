@@ -17,6 +17,7 @@ ignore = "0.4.23"
 indicatif = "0.17.9"
 prettytable = "0.10.0"
 globset = "0.4.15"
+log = "0.4.22"
 
 [dev-dependencies]
 tempfile = "3.14.0"

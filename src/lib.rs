@@ -5,13 +5,13 @@ use anyhow::Result;
 use globset::{GlobBuilder, GlobMatcher};
 use ignore::WalkBuilder;
 use indicatif::{ProgressBar, ProgressStyle};
+use log::debug;
 use std::{
     fs::File,
     io::{BufWriter, Write},
     path::Path,
     sync::Arc,
 };
-use log::debug;
 
 #[derive(Debug)]
 pub enum Filter {
@@ -163,10 +163,12 @@ impl DirectoryProcessor {
         debug!("Writing content for file: {}", path.display());
 
         // If there are no content filters, write the content
-        if self.filters.is_empty() || self.filters.iter().any(|f| match f {
-            Filter::ContentContains(ref s) => content.contains(s),
-            _ => false,
-        }) {
+        if self.filters.is_empty()
+            || self.filters.iter().any(|f| match f {
+                Filter::ContentContains(ref s) => content.contains(s),
+                _ => false,
+            })
+        {
             writeln!(writer, "\n--- {} ---", path.display())?;
             writeln!(writer, "{}", content)?;
             pb.inc(1);

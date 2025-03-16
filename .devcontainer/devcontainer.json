@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "build": ". \"$HOME/.cargo/env\"  && cargo build",
+    "test": ". \"$HOME/.cargo/env\"  &&  cargo test",
+    "launch": ". \"$HOME/.cargo/env\"  && cargo run"
+  }
+}

@@ -67,6 +67,71 @@ impl DirectoryProcessor {
             filters,
         }
     }
+
+    pub fn run(&self, directory_path: &Path) -> Result<usize> {
+        let pb = ProgressBar::new(0);
+        pb.set_style(
+            ProgressStyle::default_bar()
+                .template("{msg} [{elapsed_precise}] {bar:40.cyan} {percent}%")?
+                .progress_chars("=>-"),
+        );
+
+        // Walk the directory, filtering files and directories
+        let walker = WalkBuilder::new(directory_path)
+            .standard_filters(true)
+            .build();
+
+        let mut file_paths = Vec::new();
+
+        for entry in walker {
+            let entry = match entry {
+                Ok(e) => e,
+                Err(err) => {
+                    eprintln!("Error reading entry: {}", err);
+                    continue;
+                }
+            };
+
+            let path = entry.path();
+
+            // Skip directories matching exclusion patterns
+            if path.is_dir()
+                && self
+                    .excluded_matchers
+                    .iter()
+                    .any(|matcher| matcher.is_match(path))
+            {
+                continue; // Do not process this directory
+            }
+
+            // Process files matching criteria
+            if path.is_file() && self.should_process_file(path) {
+                file_paths.push(path.to_owned());
+            }
+        }
+
+        pb.set_length(file_paths.len() as u64);
+
+        let output_file = File::create(self.output.clone())?;
+        let mut writer = BufWriter::new(output_file);
+
+        if !self.suppress_prompt {
+            writeln!(
+                writer,
+                "This is a .txt file representing an entire directory's contents."
+            )?;
+            writeln!(writer, "Each file is separated by a line with its path.\n")?;
+        }
+
+        for path in &file_paths {
+            self.process_and_write_file(path, &mut writer, &pb)?;
+        }
+
+        pb.finish_with_message("Directory processing complete");
+
+        Ok(file_paths.len())
+    }
+
     pub fn should_process_file(&self, path: &Path) -> bool {
         // Check if the path is empty
         if path.to_str().unwrap_or("").is_empty() {
@@ -142,7 +207,7 @@ impl DirectoryProcessor {
             .map_or(false, |ext| self.extensions.iter().any(|e| e == ext))
     }
 
-    pub fn process_and_write_file(
+    fn process_and_write_file(
         &self,
         path: &Path,
         writer: &mut BufWriter<File>,
@@ -175,69 +240,5 @@ impl DirectoryProcessor {
         }
 
         Ok(())
-    }
-
-    pub fn run(&self, directory_path: &Path) -> Result<usize> {
-        let pb = ProgressBar::new(0);
-        pb.set_style(
-            ProgressStyle::default_bar()
-                .template("{msg} [{elapsed_precise}] {bar:40.cyan} {percent}%")?
-                .progress_chars("=>-"),
-        );
-
-        // Walk the directory, filtering files and directories
-        let walker = WalkBuilder::new(directory_path)
-            .standard_filters(true)
-            .build();
-
-        let mut file_paths = Vec::new();
-
-        for entry in walker {
-            let entry = match entry {
-                Ok(e) => e,
-                Err(err) => {
-                    eprintln!("Error reading entry: {}", err);
-                    continue;
-                }
-            };
-
-            let path = entry.path();
-
-            // Skip directories matching exclusion patterns
-            if path.is_dir()
-                && self
-                    .excluded_matchers
-                    .iter()
-                    .any(|matcher| matcher.is_match(path))
-            {
-                continue; // Do not process this directory
-            }
-
-            // Process files matching criteria
-            if path.is_file() && self.should_process_file(path) {
-                file_paths.push(path.to_owned());
-            }
-        }
-
-        pb.set_length(file_paths.len() as u64);
-
-        let output_file = File::create(self.output.clone())?;
-        let mut writer = BufWriter::new(output_file);
-
-        if !self.suppress_prompt {
-            writeln!(
-                writer,
-                "This is a .txt file representing an entire directory's contents."
-            )?;
-            writeln!(writer, "Each file is separated by a line with its path.\n")?;
-        }
-
-        for path in &file_paths {
-            self.process_and_write_file(path, &mut writer, &pb)?;
-        }
-
-        pb.finish_with_message("Directory processing complete");
-
-        Ok(file_paths.len())
     }
 }

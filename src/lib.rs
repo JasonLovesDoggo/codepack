@@ -8,7 +8,7 @@ use indicatif::{ProgressBar, ProgressStyle};
 use log::debug;
 use std::{
     fs::File,
-    io::{BufWriter, Write},
+    io::{BufRead, BufWriter, Write},
     path::Path,
     sync::Arc,
 };
@@ -25,6 +25,7 @@ pub struct DirectoryProcessor {
     excluded_matchers: Arc<Vec<GlobMatcher>>,
     suppress_prompt: bool,
     output: String,
+    force: bool,
     filters: Vec<Filter>,
 }
 
@@ -46,6 +47,7 @@ impl DirectoryProcessor {
         excluded_files: Vec<String>,
         suppress_prompt: bool,
         output: String,
+        force: bool,
         filters: Vec<Filter>,
     ) -> Self {
         let excluded_files = create_exclusions(excluded_files);
@@ -64,11 +66,24 @@ impl DirectoryProcessor {
             excluded_matchers: Arc::new(excluded_matchers),
             suppress_prompt,
             output,
+            force,
             filters,
         }
     }
 
     pub fn run(&self, directory_path: &Path) -> Result<usize> {
+        // Validate the output file if provided
+        match self.validate_output_file(
+            self.output.clone(),
+            self.force,
+            &mut std::io::BufReader::new(std::io::stdin().lock()),
+            &mut std::io::stdout(),
+        ) {
+            Ok(false) => std::process::exit(0), // exit if 'n'
+            Err(err) => eprintln!("Error during output file validation: {}", err),
+            _ => {}
+        }
+
         let pb = ProgressBar::new(0);
         pb.set_style(
             ProgressStyle::default_bar()
@@ -205,6 +220,69 @@ impl DirectoryProcessor {
         path.extension()
             .and_then(|ext| ext.to_str())
             .map_or(false, |ext| self.extensions.iter().any(|e| e == ext))
+    }
+
+    pub fn validate_output_file<R: BufRead, W: Write>(
+        &self,
+        output_path: String,
+        force: bool,
+        reader: &mut R,
+        writer: &mut W,
+    ) -> std::io::Result<bool> {
+        let path = std::path::Path::new(&output_path);
+
+        if path.exists() {
+            if force {
+                return Ok(true);
+            }
+
+            let file = File::open(&output_path)?;
+            let mut buf_reader = std::io::BufReader::new(&file);
+            let mut first_line = String::new();
+
+            // Read the first line of the file and handle other files
+            match buf_reader.read_line(&mut first_line) {
+                Ok(bytes_read) => {
+                    if bytes_read > 0
+                        && first_line.contains(
+                            "This is a .txt file representing an entire directory's contents.",
+                        )
+                    {
+                        return Ok(true);
+                    }
+                }
+                Err(err) if err.kind() == std::io::ErrorKind::InvalidData => {
+                    eprintln!("Binary output file detected (Invalid UTF-8).");
+                }
+                Err(err) => {
+                    eprintln!("I/O error while reading output file: {}", err);
+                    return Err(err.into());
+                }
+            }
+
+            debug!("Opened output file '{}', reading file size.", output_path);
+
+            // Check metadata for file size
+            if let Ok(metadata) = std::fs::metadata(&output_path) {
+                if metadata.len() > 0 {
+                    write!(
+                        writer,
+                        "Output file '{}' already exists and contains data. Overwrite? (y/n): ",
+                        output_path
+                    )?;
+                    writer.flush()?;
+
+                    let mut input = String::new();
+                    reader.read_line(&mut input)?;
+
+                    if !input.trim().eq_ignore_ascii_case("y") {
+                        writeln!(writer, "Operation cancelled.")?;
+                        return Ok(false);
+                    }
+                }
+            }
+        }
+        Ok(true)
     }
 
     fn process_and_write_file(

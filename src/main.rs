@@ -29,6 +29,10 @@ struct Args {
     #[arg(long)]
     suppress_prompt: bool,
 
+    /// Overwrite output file without confirmation
+    #[arg(long)]
+    force: bool,
+
     #[arg(short = 'f', long = "filter", action = clap::ArgAction::Append)]
     filters: Vec<String>,
 }
@@ -70,6 +74,7 @@ fn main() -> Result<()> {
         args.excluded_files,
         args.suppress_prompt,
         args.output.clone().unwrap(),
+        args.force,
         filters,
     );
 

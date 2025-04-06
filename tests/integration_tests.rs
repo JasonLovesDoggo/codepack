@@ -17,6 +17,7 @@ fn test_integration() -> Result<(), Box<dyn std::error::Error>> {
         vec![],
         false,
         output_file_path.to_str().unwrap().to_string(),
+        false,
         vec![],
     );
     let files_processed = processor.run(temp_dir.path())?;

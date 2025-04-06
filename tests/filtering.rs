@@ -8,6 +8,7 @@ fn test_should_process_file_empty_path() {
         vec!["excluded.rs".to_string()],
         false,
         String::new(),
+        false,
         vec![],
     );
     let path = Path::new("");
@@ -21,6 +22,7 @@ fn test_should_process_file_excluded_by_name() {
         vec!["test.lock".to_string()],
         false,
         String::new(),
+        false,
         vec![],
     );
     let path = Path::new("test.lock");
@@ -29,16 +31,28 @@ fn test_should_process_file_excluded_by_name() {
 
 #[test]
 fn test_should_process_file_excluded_by_extension() {
-    let processor =
-        DirectoryProcessor::new(vec!["rs".to_string()], vec![], false, String::new(), vec![]);
+    let processor = DirectoryProcessor::new(
+        vec!["rs".to_string()],
+        vec![],
+        false,
+        String::new(),
+        false,
+        vec![],
+    );
     let path = Path::new("main.py");
     assert!(!processor.should_process_file(path));
 }
 
 #[test]
 fn test_should_process_file_included_by_extension() {
-    let processor =
-        DirectoryProcessor::new(vec!["rs".to_string()], vec![], false, String::new(), vec![]);
+    let processor = DirectoryProcessor::new(
+        vec!["rs".to_string()],
+        vec![],
+        false,
+        String::new(),
+        false,
+        vec![],
+    );
     let path = Path::new("main.rs");
     assert!(processor.should_process_file(path));
 }
@@ -50,6 +64,7 @@ fn test_should_process_file_filter_file_name() {
         vec![],
         false,
         String::new(),
+        false,
         vec![Filter::FileName("main.rs".to_string())],
     );
     let path = Path::new("main.rs");
@@ -66,6 +81,7 @@ fn test_should_process_file_filter_path_contains() {
         vec![],
         false,
         String::new(),
+        false,
         vec![Filter::PathContains("src".to_string())],
     );
     let path = Path::new("src/main.rs");
@@ -82,6 +98,7 @@ fn test_should_process_file_combined_filters() {
         vec![],
         false,
         String::new(),
+        false,
         vec![
             Filter::FileName("main".to_string()),
             Filter::PathContains("src".to_string()),
@@ -104,6 +121,7 @@ fn test_should_process_file_exclusion_and_filters() {
         vec!["excluded.rs".to_string()],
         false,
         String::new(),
+        false,
         vec![Filter::PathContains("src".to_string())],
     );
     let excluded_path = Path::new("src/excluded.rs");

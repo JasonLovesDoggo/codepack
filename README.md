@@ -41,7 +41,8 @@ By default, codepack will process the directory and output a .txt file with the 
 - **Lightning Fast**: `codepack` is optimized for speed, ensuring that even large directories are processed efficiently.
 - **Customizable Output**: Specify the output file name with the `-o` option, or let `codepack` generate one for you.
 - **Selective File Processing**: Use the `-e` or `--extension` flag to include specific file types (e.g., `.rs`, `.toml`).
-- **Suppress Output Prompt**: If you don’t want the default prompt in your output file, use the `--suppress-prompt` option.
+- **File Exclusion**: Exclude specific files or patterns with the `-x` or `--excluded-files` flag (e.g., `.lock` files, `node_modules/`).
+- **Suppress Output Prompt**: If you don't want the default prompt in your output file, use the `--suppress-prompt` option.
 - **Powerful Filtering**: Filter files based on file names, paths, and content using the `-f` or `--filter` option.
 
 ### Filtering with codepack
@@ -69,18 +70,18 @@ You can combine multiple filters using multiple `-f` or `--filter` options. Code
 ```bash
 codepack [OPTIONS] <DIRECTORY_PATH>
 
-Convert local directory contents into a single text file, useful for processing by an LLM.
-
 Options:
--h, --help              Show this message
--e, --extension <EXT>   Include files with the specified extension(s) (e.g., -e rs -e toml)
--o, --output <OUTPUT>   Specify the output file path (optional)
---suppress-prompt   Suppress the description of the file format in the output
---force   Overwrite output file without confirmation
--f,  --filter <FILTER>      Filter files based on name, path, or content (e.g., -f "file.name=main.rs").
+  -o, --output <OUTPUT>          Output file path (optional)
+  -e, --extension <EXTENSIONS>   File extensions to include (e.g., -e rs -e toml)
+  -x, --excluded-files <FILES>   Files to exclude by name/pattern (e.g., -x *.lock -x node_modules/)
+  -f, --filter <FILTERS>         Filter files by name, path, or content (e.g., -f "file.name=main.rs")
+      --suppress-prompt          Suppress the output prompt
+  -h, --help                     Print help
+  -V, --version                  Print version
 ```
 
-Examples
+## Examples
+
 Convert a directory to a .txt file with a custom output name:
 
 ```bash
@@ -91,6 +92,12 @@ Process only `.rs` and `.toml` files from a directory:
 
 ```bash
 codepack /path/to/my/code -e rs -e toml
+```
+
+Exclude lock files and node_modules:
+
+```bash
+codepack /path/to/my/code -x "*.lock" -x "node_modules/"
 ```
 
 ## Contributing

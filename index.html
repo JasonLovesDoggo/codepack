@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" id="oranda" class="dark axo">
+  <head>
+    <title>codepack</title>
+    
+      <meta property="og:url" content="https://codepack.jasoncameron.dev" />
+    
+    
+      <link rel="icon" href="/favicon.ico" />
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      <meta name="description" content="A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis." />
+      <meta property="og:description" content="A *lightning-fast* tool that transforms a directory into a single, LLM-friendly text file, perfect for easy processing and analysis." />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="codepack" />
+    
+    
+    
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+    <link rel="stylesheet" href="/oranda-v0.6.1.css" />
+    
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-body">
+        
+          <div class="repo_banner">
+            <a href="https://github.com/JasonLovesDoggo/codepack">
+              <div class="github-icon" aria-hidden="true"></div>
+              Check out our GitHub!
+            </a>
+          </div>
+        
+
+        <main>
+          <header>
+            
+            <h1 class="title">codepack</h1>
+            
+  <nav class="nav">
+    <ul>
+      <li><a href="/">Home</a></li>
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li><a href="/changelog/">Changelog</a></li>
+      
+    </ul>
+  </nav>
+
+          </header>
+
+          
+
+
+    <h1><code>codepack</code></h1>
+<p><a href="https://crates.io/crates/codepack" rel="noopener noreferrer"><img src="https://img.shields.io/crates/v/codepack.svg" alt="crates.io"></a> <a href="https://github.com/JasonLovesDoggo/codepack/actions/workflows/web.yml" rel="noopener noreferrer"><img src="https://github.com/JasonLovesDoggo/codepack/actions/workflows/web.yml/badge.svg" alt="Web"></a> <a href="https://github.com/JasonLovesDoggo/codepack/actions/workflows/release.yml" rel="noopener noreferrer"><img src="https://github.com/JasonLovesDoggo/codepack/actions/workflows/release.yml/badge.svg" alt="Release"></a></p>
+<p><strong><code>codepack</code></strong> transforms directories into <em>LLM-friendly</em> text files.</p>
+<p>A <em>lightning-fast</em> tool that converts the contents of a directory into a single, LLM-friendly text file, making it easy to process and analyze data with Large Language Models.</p>
+<h2>Installation</h2>
+<p>For detailed installation instructions, please visit the <a href="https://codepack.jasoncameron.dev/" rel="noopener noreferrer">Codepack documentation</a>.</p>
+<p>Alternatively, you can follow the instructions below to install <code>codepack</code>.</p>
+<h3>Pre-built Binaries (Recommended)</h3>
+<p>Please see <a href="https://codepack.jasoncameron.dev" rel="noopener noreferrer">the documentation</a></p>
+<h3>Installation via Cargo (Optional)</h3>
+<p>Alternatively, you can install <code>codepack</code> from source with Rust's package manager <code>cargo</code>:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">cargo install codepack
+</span></pre>
+
+<p>This will download, build, and install the latest version of codepack.</p>
+<h2>Quickstart</h2>
+<p>Once installed, simply run:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack /path/to/directory
+</span></pre>
+
+<p>By default, codepack will process the directory and output a .txt file with the contents of the files inside the directory. If you don't specify an output file, it will generate one based on the directory name and the number of files processed.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Lightning Fast</strong>: <code>codepack</code> is optimized for speed, ensuring that even large directories are processed efficiently.</li>
+<li><strong>Customizable Output</strong>: Specify the output file name with the <code>-o</code> option, or let <code>codepack</code> generate one for you.</li>
+<li><strong>Selective File Processing</strong>: Use the <code>-e</code> or <code>--extension</code> flag to include specific file types (e.g., <code>.rs</code>, <code>.toml</code>).</li>
+<li><strong>File Exclusion</strong>: Exclude specific files or patterns with the <code>-x</code> or <code>--excluded-files</code> flag (e.g., <code>.lock</code> files, <code>node_modules/</code>).</li>
+<li><strong>Suppress Output Prompt</strong>: If you don't want the default prompt in your output file, use the <code>--suppress-prompt</code> option.</li>
+<li><strong>Powerful Filtering</strong>: Filter files based on file names, paths, and content using the <code>-f</code> or <code>--filter</code> option.</li>
+</ul>
+<h3>Filtering with codepack</h3>
+<p>Codepack supports three types of filters:</p>
+<ol>
+<li>File Name Filters: Filter files based on their names using the file.name= prefix followed by the pattern to match.</li>
+</ol>
+<blockquote>
+<p>Example: <code>codepack -f "file.name=main.py" /path/to/project</code> (includes only files named "main.py")</p>
+</blockquote>
+<ol start="2">
+<li>Path Contains Filters: Filter files based on a substring present anywhere in their path using the path.contains= prefix followed by the substring.</li>
+</ol>
+<blockquote>
+<p>Example: <code>codepack -f "path.contains=src" .</code> (includes only files within the "src" directory and its subdirectories)</p>
+</blockquote>
+<ol start="3">
+<li>Content Contains Filters: Filter files based on a substring present in their content using the content.contains= prefix followed by the substring.</li>
+</ol>
+<p>Note: Content filters are applied after the file has been read, so this can be slower than other filter types.</p>
+<blockquote>
+<p>Example: <code>codepack -f "content.contains=function" /path/to/code</code> (includes only files containing the word "function")</p>
+</blockquote>
+<p>You can combine multiple filters using multiple <code>-f</code> or <code>--filter</code> options. Codepack uses <code>OR</code> logic for filtering, so a file will be included if it matches any of the provided filters.</p>
+<h2>Usage</h2>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack </span><span style="font-style:italic;color:#c792ea;">[</span><span style="color:#82aaff;">OPTIONS</span><span style="font-style:italic;color:#c792ea;">] </span><span style="color:#89ddff;">&lt;</span><span style="color:#82aaff;">DIRECTORY_PATH</span><span style="color:#89ddff;">&gt;
+</span><span style="color:#eeffff;">
+</span><span style="color:#82aaff;">Options:
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-o,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">output </span><span style="color:#89ddff;">&lt;</span><span style="color:#82aaff;">OUTPUT</span><span style="color:#89ddff;">&gt;</span><span style="color:#82aaff;">          Output file path (optional</span><span style="color:#eeffff;">)
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-e,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">extension </span><span style="color:#89ddff;">&lt;</span><span style="color:#82aaff;">EXTENSIONS</span><span style="color:#89ddff;">&gt;</span><span style="color:#82aaff;">   File extensions to include (e.g.,</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">e</span><span style="color:#82aaff;"> rs</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">e</span><span style="color:#82aaff;"> toml</span><span style="color:#eeffff;">)
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-x,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">excluded-files </span><span style="color:#89ddff;">&lt;</span><span style="color:#82aaff;">FILES</span><span style="color:#89ddff;">&gt;</span><span style="color:#82aaff;">   Files to exclude by name/pattern (e.g.,</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">x </span><span style="color:#89ddff;">*</span><span style="color:#82aaff;">.lock</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">x</span><span style="color:#82aaff;"> node_modules/</span><span style="color:#eeffff;">)
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-f,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">filter </span><span style="color:#89ddff;">&lt;</span><span style="color:#82aaff;">FILTERS</span><span style="color:#89ddff;">&gt;</span><span style="color:#82aaff;">         Filter files by name, path, or content (e.g.,</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">f </span><span style="color:#89ddff;">"</span><span style="color:#c3e88d;">file.name=main.rs</span><span style="color:#89ddff;">"</span><span style="color:#eeffff;">)
+</span><span style="color:#eeffff;">      </span><span style="color:#82aaff;">--suppress-prompt          Suppress the output prompt
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-h,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">help</span><span style="color:#82aaff;">                     Print help
+</span><span style="color:#eeffff;">  </span><span style="color:#82aaff;">-V,</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">version</span><span style="color:#82aaff;">                  Print version
+</span></pre>
+
+<h2>Examples</h2>
+<p>Convert a directory to a .txt file with a custom output name:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack /path/to/my/code</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">o</span><span style="color:#82aaff;"> my_code.txt
+</span></pre>
+
+<p>Process only <code>.rs</code> and <code>.toml</code> files from a directory:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack /path/to/my/code</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">e</span><span style="color:#82aaff;"> rs</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">e</span><span style="color:#82aaff;"> toml
+</span></pre>
+
+<p>Exclude lock files and node_modules:</p>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">codepack /path/to/my/code</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">x </span><span style="color:#89ddff;">"</span><span style="color:#c3e88d;">*.lock</span><span style="color:#89ddff;">" -</span><span style="color:#f78c6c;">x </span><span style="color:#89ddff;">"</span><span style="color:#c3e88d;">node_modules/</span><span style="color:#89ddff;">"
+</span></pre>
+
+<h2>Contributing</h2>
+<p>We welcome contributions to codepack! Please feel free to submit issues or pull requests on GitHub.</p>
+<h2>License</h2>
+<p>codepack is distributed under the terms of the GPL-3.0 License. See the <a href="./LICENSE" rel="noopener noreferrer">LICENSE</a> file for details.</p>
+
+
+
+        </main>
+      </div>
+
+      <footer>
+        
+          <a href="https://github.com/JasonLovesDoggo/codepack"><div class="github-icon" aria-hidden="true"></div></a>
+        
+        <span>
+          codepack, MIT
+        </span>
+      </footer>
+    </div>
+
+    
+    
+
+    
+
+
+  </body>
+</html>

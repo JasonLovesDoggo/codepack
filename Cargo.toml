@@ -1,6 +1,6 @@
 [package]
 name = "codepack"
-version = "0.11.5"
+version = "0.11.7"
 edition = "2021"
 
 repository = "https://github.com/JasonLovesDoggo/codepack"
